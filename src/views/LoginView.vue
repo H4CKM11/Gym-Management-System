@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bg-slate-100 h-screen flex justify-center items-center">
       <LoginComponentDesktop />
     </div>
 </template>
