@@ -18,7 +18,16 @@
             <!-- Image -->
             <img src="../../assets/images/image2.jpg" class=" w-[60%] object-cover object-center"/>
         </div>
-        <ToastNotificationError :modalActive="modalActive" >{{ message }}</ToastNotificationError>
+
+
+          <Teleport to="body">
+            <div class="fixed bottom-16 right-16">
+                <ToastNotificationError :modalActive="modalActive">
+                  <div class="p-4 font-semibold text-red-800">{{ message }}</div>
+                </ToastNotificationError>
+            </div>
+          </Teleport>
+
 </template>
 
 
@@ -54,7 +63,18 @@ const submitForm = async () => {
     console.log(message.value);
     toggleModal ();
     console.log(modalActive.value);
+    modalTimeOut();
   }
+}
+
+const modalTimeOut = () =>
+{
+  setTimeout(() => {
+    toggleModal()},
+    5000
+);
+
+  console.log(modalActive.value)
 }
 
 
@@ -74,4 +94,5 @@ input:-webkit-autofill {
 input:-webkit-autofill::first-line {
   color: #000; /* Change text color as needed */
 }
+
 </style>
