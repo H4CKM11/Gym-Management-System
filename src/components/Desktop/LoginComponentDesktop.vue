@@ -8,7 +8,7 @@
                     <div class="flex flex-col mt-8 gap-8">
                             <p class="text-3xl text-gray-600 font-bold">Login</p>
                             <input type="text" v-model="username" class=" border-b-2 focus:outline-none" id="username" placeholder="Enter your username">
-                            <input type="password" v-model="password" class=" border-b-2 focus:outline-none" id="password" placeholder="Enter your password">
+                            <input type="password" v-model="password" @keyup.enter="submitForm" class=" border-b-2 focus:outline-none" id="password" placeholder="Enter your password">
                     </div>
                     <p class="text-right hover:text-black hover:cursor-pointer text-gray-600 mt-2">Forgot Password?</p>
                     <button class="bg-Golds-Gym-Yellow text-gray-700 font-bold py-2 px-4 rounded w-full mt-8" @click="submitForm">Log In</button>
@@ -22,9 +22,17 @@
 
           <Teleport to="body">
             <div class="fixed bottom-16 right-16">
-                <ToastNotificationError :modalActive="modalActive">
+                <ToastNotificationError :modalActive="modalErrorActive">
                   <div class="p-4 font-semibold text-red-800">{{ message }}</div>
                 </ToastNotificationError>
+            </div>
+          </Teleport>
+
+          <Teleport to="body">
+            <div class="fixed bottom-16 right-16">
+                <ToastNotificationOk :modalActive="modalOkActive">
+                  <div class="p-4 font-semibold text-green-800">{{ message }}</div>
+                </ToastNotificationOk>
             </div>
           </Teleport>
 
@@ -36,16 +44,24 @@
 import axios from "axios";
 import {ref} from "vue"
 import ToastNotificationError from '../Universal/ToastNotificationError.vue'
+import ToastNotificationOk from "../Universal/ToastNotificationOk.vue";
+import router from "../../router";
 
 const username = ref("");
 const password = ref("");
 const message = ref("");
 
-const modalActive = ref(null);
+const modalErrorActive = ref(null);
+const modalOkActive = ref(null);
 
-const toggleModal = () => {
-    modalActive.value = !modalActive.value;
+const toggleErrorModal = () => {
+    modalErrorActive.value = !modalErrorActive.value;
 }
+
+const toggleOkModal = () => {
+  modalOkActive.value = !modalOkActive.value;
+}
+
 
 const submitForm = async () => {
 
@@ -57,24 +73,41 @@ const submitForm = async () => {
 
   try{
     const response = await axios.post("http://localhost:5205/Employee/Login", data);
+
+    console.log(response.data.success);
+    if(response.data.success)
+    {
+      message.value = response.data.message;
+      toggleOkModal();
+      modalOkTimeOut();
+    }
   }
   catch (error) {
     message.value = error.response.data.message
     console.log(message.value);
-    toggleModal ();
-    console.log(modalActive.value);
-    modalTimeOut();
+    toggleErrorModal ();
+    console.log(modalErrorActive.value);
+    modalErrorTimeOut();
   }
 }
 
-const modalTimeOut = () =>
+const modalErrorTimeOut = () =>
 {
   setTimeout(() => {
-    toggleModal()},
+    toggleErrorModal()},
     5000
 );
 
-  console.log(modalActive.value)
+  console.log(modalErrorActive.value)
+}
+
+const modalOkTimeOut = () =>
+{
+  setTimeout(() => {
+    toggleOkModal();
+    router.push('/dashboard');},
+    2500
+);
 }
 
 

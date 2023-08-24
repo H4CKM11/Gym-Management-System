@@ -3,7 +3,9 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",],
   theme: {
     extend: {colors: {
-      'Golds-Gym-Yellow' : '#ffed00'
+      'Golds-Gym-Yellow' : '#ffed00',
+      'Golds-Gym-Secondary' : '#F0DF00',
+      'Golds-Gym-Light' : '#fff680'
     },
     screens: {
       '1920res' : '1920px',
